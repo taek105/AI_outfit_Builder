@@ -11,10 +11,10 @@ GEMINI_TEXT_MODEL=gemini-2.0-flash
 GEMINI_IMAGE_MODEL=gemini-2.5-flash-image
 ```
 
-- `GEMINI_API_KEY`: 엄마 AI 평가 텍스트 생성에 사용합니다.
-- `GEMINI_IMAGE_API_KEY`: 모자, 상의, 하의 이미지 생성에 사용합니다.
-- 두 API 키를 같은 Gemini 키로 써도 됩니다.
-- `GEMINI_IMAGE_API_KEY`가 없으면 이미지 생성은 mock 이미지로 동작합니다.
+- `GEMINI_API_KEY`: LLM 평가 텍스트 생성에 사용합니다.
+- `GEMINI_IMAGE_API_KEY`: LLM 이미지 생성에 사용합니다.
+  - 두 API 키를 같은 Gemini 키로 써도 됩니다
+  - `GEMINI_IMAGE_API_KEY`가 없으면 이미지 생성은 mock 이미지로 동작합니다.
 
 ## 의존성 버전
 
@@ -34,7 +34,7 @@ flowchart LR
   Next --> ImageAPI[Gemini Image API]
   Next --> TextAPI[Gemini Text API]
   Next --> SQLite[(SQLite)]
-  Next --> Uploads[public/uploads]
+  Next --> Uploads[로컬 이미지 저장소]
 
   ImageAPI --> Next
   TextAPI --> Next
