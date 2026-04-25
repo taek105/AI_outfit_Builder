@@ -873,6 +873,144 @@ button {
   letter-spacing: 0;
 }
 
+.theme-toggle {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 20;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255, 250, 242, 0.92);
+  color: var(--text);
+  box-shadow: 0 10px 24px var(--shadow);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+html[data-theme="dark"] {
+  --bg: #1d1a18;
+  --panel: #27221f;
+  --line: #4a403a;
+  --text: #f5efe7;
+  --muted: #b9aaa0;
+  --accent: #f08a5d;
+  --accent-strong: #ffab7a;
+  --shadow: rgba(0, 0, 0, 0.42);
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at top, rgba(124, 84, 62, 0.36), transparent 32%),
+    linear-gradient(180deg, #27221f 0%, var(--bg) 100%);
+}
+
+html[data-theme="dark"] .app-shell {
+  background: #171412;
+}
+
+html[data-theme="dark"] .phone-frame {
+  background:
+    linear-gradient(180deg, #433b36 0%, #171412 100%);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.58),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .phone-notch {
+  background: #11100f;
+}
+
+html[data-theme="dark"] .phone-screen {
+  background:
+    radial-gradient(circle at top, rgba(124, 84, 62, 0.36), transparent 32%),
+    linear-gradient(180deg, #27221f 0%, var(--bg) 100%);
+}
+
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .theme-toggle {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="dark"] .panel {
+  background: color-mix(in srgb, var(--panel) 92%, #2a2420 8%);
+}
+
+html[data-theme="dark"] .part-card,
+html[data-theme="dark"] .status-box,
+html[data-theme="dark"] .score-card,
+html[data-theme="dark"] .mom-review-card,
+html[data-theme="dark"] .prompt-list article,
+html[data-theme="dark"] .outfit-data-card,
+html[data-theme="dark"] .outfit-image-card,
+html[data-theme="dark"] .outfit-score-chip,
+html[data-theme="dark"] .outfit-prompt-list div,
+html[data-theme="dark"] .outfit-review {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .part-card.active {
+  box-shadow: 0 0 0 3px rgba(240, 138, 93, 0.18);
+}
+
+html[data-theme="dark"] .part-preview {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(240, 138, 93, 0.1));
+}
+
+html[data-theme="dark"] .part-card textarea {
+  background: rgba(8, 7, 6, 0.72);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .outfit-card img,
+html[data-theme="dark"] .detail-image img,
+html[data-theme="dark"] .outfit-record-image {
+  background: #211d1a;
+}
+
+html[data-theme="dark"] .leaderboard-page .outfit-card,
+html[data-theme="dark"] .outfit-data-card,
+html[data-theme="dark"] .outfit-image-card {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36);
+}
+
+html[data-theme="dark"] .score-badge {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+html[data-theme="dark"] .mom-review-card,
+html[data-theme="dark"] .outfit-score-chip,
+html[data-theme="dark"] .outfit-review {
+  border-color: rgba(240, 138, 93, 0.18);
+}
+
+html[data-theme="dark"] .mom-review-card.score {
+  background: rgba(240, 138, 93, 0.12);
+  border-color: rgba(240, 138, 93, 0.34);
+}
+
+html[data-theme="dark"] .overview-kicker {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="dark"] .popular-spotlight {
+  border-top-color: rgba(240, 138, 93, 0.18);
+}
+
+html[data-theme="dark"] .popular-spotlight-card {
+  background:
+    radial-gradient(circle at top, rgba(240, 138, 93, 0.16), transparent 32%),
+    linear-gradient(180deg, #211d1a 0%, #151210 100%);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
+}
+
+html[data-theme="dark"] .popular-spotlight-card div {
+  border-color: rgba(58, 51, 47, 0.9);
+  background: rgba(28, 25, 23, 0.92);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+}
+
 @media (min-width: 721px) {
   .app-shell {
     padding: 18px;

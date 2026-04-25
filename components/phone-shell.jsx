@@ -2,12 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const THEME_STORAGE_KEY = "mom-ai-fashion-theme";
+
 export function PhoneShell({ children }) {
   const screenRef = useRef(null);
   const shellRef = useRef(null);
   const touchYRef = useRef(null);
   const [topPopularOutfit, setTopPopularOutfit] = useState(null);
   const [hasLoadedTopPopular, setHasLoadedTopPopular] = useState(false);
+  const [theme, setTheme] = useState("default");
   const showOverview = true;
 
   const loadTopPopularOutfit = useCallback(async ({ showLoading = false } = {}) => {
@@ -111,8 +114,39 @@ export function PhoneShell({ children }) {
     };
   }, [loadTopPopularOutfit, showOverview]);
 
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+
+    if (savedTheme === "dark") {
+      setTheme("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.dataset.theme = "dark";
+      window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+      return;
+    }
+
+    delete document.documentElement.dataset.theme;
+    window.localStorage.setItem(THEME_STORAGE_KEY, "default");
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((current) => (current === "dark" ? "default" : "dark"));
+  }
+
   return (
     <div ref={shellRef} className={`app-shell ${showOverview ? "app-shell-overview" : ""}`}>
+      <button
+        className="theme-toggle"
+        type="button"
+        aria-pressed={theme === "dark"}
+        onClick={toggleTheme}
+      >
+        {theme === "dark" ? "기본 테마" : "다크 테마"}
+      </button>
       {showOverview ? (
         <aside className="service-overview" aria-label="서비스 개요">
           <h2>AI로 만들고, <br /> 직접 입혀보고, <br /> 엄마 AI한테 평가받으세요.</h2>
