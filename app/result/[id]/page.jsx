@@ -21,6 +21,14 @@ export default async function ResultPage({ params }) {
 
         <section className="detail-grid">
           <article className="panel panel-pad detail-image">
+            <a
+              className="image-save-button"
+              href={outfit.composedImgUrl}
+              download="your_outfit.png"
+              aria-label="코디 이미지로 저장"
+            >
+              이미지 저장
+            </a>
             <img src={outfit.composedImgUrl} alt="composed outfit" />
           </article>
 
