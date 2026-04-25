@@ -1,0 +1,30 @@
+import { NextResponse } from "next/server";
+import { generatePartImage } from "@/lib/gemini";
+import { validatePart, validatePrompt } from "@/lib/validators";
+
+export async function POST(request, { params }) {
+  const { part } = await params;
+
+  if (!validatePart(part)) {
+    return NextResponse.json({ error: "invalid part" }, { status: 400 });
+  }
+
+  const body = await request.json();
+
+  if (!validatePrompt(body?.prompt)) {
+    return NextResponse.json({ error: "prompt is required" }, { status: 400 });
+  }
+
+  try {
+    const result = await generatePartImage(part, body.prompt);
+
+    return NextResponse.json({
+      part,
+      imageDataUrl: result.imageDataUrl,
+      finalPrompt: result.finalPrompt,
+      source: result.source
+    });
+  } catch (error) {
+    return NextResponse.json({ error: error.message || "image generation failed" }, { status: 502 });
+  }
+}

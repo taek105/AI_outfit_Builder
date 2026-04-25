@@ -1,0 +1,9 @@
+.env*.local
+.codex
+.next/
+node_modules/
+db.sqlite
+public/uploads/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
