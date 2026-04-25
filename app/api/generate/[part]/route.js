@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
 import { generatePartImage } from "@/lib/gemini";
+import { guardCostlyApi } from "@/lib/request-guard";
 import { validatePart, validatePrompt } from "@/lib/validators";
 
 export async function POST(request, { params }) {
+  const guardResponse = await guardCostlyApi(request, {
+    action: "generate",
+    sessionLimit: 20
+  });
+
+  if (guardResponse) {
+    return guardResponse;
+  }
+
   const { part } = await params;
 
   if (!validatePart(part)) {

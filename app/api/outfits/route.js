@@ -2,10 +2,20 @@ import { NextResponse } from "next/server";
 import { composeOutfit, saveComposedImage } from "@/lib/compose";
 import { createOutfit } from "@/lib/db";
 import { generateMomReview } from "@/lib/gemini";
+import { guardCostlyApi } from "@/lib/request-guard";
 import { scoreSilhouette } from "@/lib/scoring";
 import { normalizePlacements, validateImageData, validatePrompt } from "@/lib/validators";
 
 export async function POST(request) {
+  const guardResponse = await guardCostlyApi(request, {
+    action: "outfit",
+    sessionLimit: 10
+  });
+
+  if (guardResponse) {
+    return guardResponse;
+  }
+
   const body = await request.json();
 
   const prompts = body?.prompts || {};
