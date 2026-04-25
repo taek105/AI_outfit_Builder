@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const THEME_STORAGE_KEY = "mom-ai-fashion-theme";
+const THEME_STORAGE_KEY = "mom-ai-fashion-theme-v2";
 
 export function PhoneShell({ children }) {
   const screenRef = useRef(null);
@@ -10,7 +10,7 @@ export function PhoneShell({ children }) {
   const touchYRef = useRef(null);
   const [topPopularOutfit, setTopPopularOutfit] = useState(null);
   const [hasLoadedTopPopular, setHasLoadedTopPopular] = useState(false);
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("light");
   const showOverview = true;
 
   const loadTopPopularOutfit = useCallback(async ({ showLoading = false } = {}) => {
@@ -130,11 +130,11 @@ export function PhoneShell({ children }) {
     }
 
     delete document.documentElement.dataset.theme;
-    window.localStorage.setItem(THEME_STORAGE_KEY, "default");
+    window.localStorage.setItem(THEME_STORAGE_KEY, "light");
   }, [theme]);
 
   function toggleTheme() {
-    setTheme((current) => (current === "dark" ? "default" : "dark"));
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
   }
 
   return (
@@ -145,7 +145,7 @@ export function PhoneShell({ children }) {
         aria-pressed={theme === "dark"}
         onClick={toggleTheme}
       >
-        {theme === "dark" ? "기본 테마" : "다크 테마"}
+        {theme === "dark" ? "라이트 테마" : "다크 테마"}
       </button>
       {showOverview ? (
         <aside className="service-overview" aria-label="서비스 개요">
