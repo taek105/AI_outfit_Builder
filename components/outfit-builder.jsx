@@ -70,6 +70,7 @@ export function OutfitBuilder() {
   const [isGenerating, startGenerating] = useTransition();
   const [isSubmitting, startSubmitting] = useTransition();
   const canvasRef = useRef(null);
+  const submitLockRef = useRef(false);
 
   const previewScore = scoreSilhouette(placements);
   const deferredScore = useDeferredValue(previewScore);
@@ -245,6 +246,10 @@ export function OutfitBuilder() {
   }
 
   function handleSubmit() {
+    if (submitLockRef.current) {
+      return;
+    }
+
     const ready = PARTS.every((part) => parts[part.key].imageDataUrl && parts[part.key].prompt.trim());
 
     if (!ready) {
@@ -252,37 +257,45 @@ export function OutfitBuilder() {
       return;
     }
 
+    submitLockRef.current = true;
+
     startSubmitting(async () => {
       setStatus("합성 이미지와 엄마 AI 평가를 생성 중입니다.");
 
-      const response = await fetch("/api/outfits", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          prompts: {
-            hat: parts.hat.prompt,
-            top: parts.top.prompt,
-            bottom: parts.bottom.prompt
+      try {
+        const response = await fetch("/api/outfits", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
           },
-          images: {
-            hat: parts.hat.imageDataUrl,
-            top: parts.top.imageDataUrl,
-            bottom: parts.bottom.imageDataUrl
-          },
-          placements
-        })
-      });
+          body: JSON.stringify({
+            prompts: {
+              hat: parts.hat.prompt,
+              top: parts.top.prompt,
+              bottom: parts.bottom.prompt
+            },
+            images: {
+              hat: parts.hat.imageDataUrl,
+              top: parts.top.imageDataUrl,
+              bottom: parts.bottom.imageDataUrl
+            },
+            placements
+          })
+        });
 
-      const payload = await response.json();
+        const payload = await response.json();
 
-      if (!response.ok) {
-        setStatus(payload.error || "제출에 실패했습니다.");
-        return;
+        if (!response.ok) {
+          submitLockRef.current = false;
+          setStatus(payload.error || "제출에 실패했습니다.");
+          return;
+        }
+
+        router.push(`/result/${payload.id}`);
+      } catch {
+        submitLockRef.current = false;
+        setStatus("제출 중 네트워크 오류가 발생했습니다.");
       }
-
-      router.push(`/result/${payload.id}`);
     });
   }
 
