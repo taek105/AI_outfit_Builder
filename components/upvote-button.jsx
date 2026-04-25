@@ -20,6 +20,7 @@ export function UpvoteButton({ outfitId, initialScore }) {
   const [popularScore, setPopularScore] = useState(initialScore);
   const [isLocked, setIsLocked] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     const votes = readVotes();
@@ -27,34 +28,42 @@ export function UpvoteButton({ outfitId, initialScore }) {
   }, [outfitId]);
 
   async function handleUpvote() {
-    if (isLocked || isPending) {
+    if (isLocked || isPending || isClicked) {
       return;
     }
 
+    setIsClicked(true);
     setIsPending(true);
-    const response = await fetch(`/api/outfits/${outfitId}/upvote`, { method: "POST" });
-    const payload = await response.json();
-    setIsPending(false);
 
-    if (!response.ok) {
-      return;
-    }
+    try {
+      const response = await fetch(`/api/outfits/${outfitId}/upvote`, { method: "POST" });
+      const payload = await response.json();
 
-    const votes = readVotes();
-    votes[outfitId] = true;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
-    setIsLocked(true);
-    setPopularScore(payload.popularScore);
-    window.dispatchEvent(new CustomEvent("outfit-upvoted", {
-      detail: {
-        outfitId,
-        popularScore: payload.popularScore
+      if (!response.ok) {
+        setIsClicked(false);
+        return;
       }
-    }));
+
+      const votes = readVotes();
+      votes[outfitId] = true;
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+      setIsLocked(true);
+      setPopularScore(payload.popularScore);
+      window.dispatchEvent(new CustomEvent("outfit-upvoted", {
+        detail: {
+          outfitId,
+          popularScore: payload.popularScore
+        }
+      }));
+    } catch {
+      setIsClicked(false);
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
-    <button className="btn secondary" type="button" disabled={isLocked || isPending} onClick={handleUpvote}>
+    <button className="btn secondary" type="button" disabled={isLocked || isPending || isClicked} onClick={handleUpvote}>
       👍 {popularScore} {isLocked ? "(완료)" : ""}
     </button>
   );
