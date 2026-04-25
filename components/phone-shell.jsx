@@ -151,8 +151,9 @@ export function PhoneShell({ children }) {
         <aside className="service-overview" aria-label="서비스 개요">
           <h2>AI로 만들고, <br /> 직접 입혀보고, <br /> 엄마 AI한테 평가받으세요.</h2>
           <p>
-            모자, 상의, 하의를 프롬프트로 생성한 뒤 실루엣 위에 배치해 하나의 코디로 합성합니다.
-            완성된 이미지는 엄마 AI의 기준으로 평가되고 리더보드에 저장됩니다.
+            {/* 모자, 상의, 하의를 프롬프트로 생성한 뒤 실루엣 위에 배치해 하나의 코디로 합성합니다.
+            완성된 이미지는 엄마 AI의 기준으로 평가되고 리더보드에 저장됩니다. */}
+            LLM API는 작동하지 않습니다.
           </p>
           <section className="popular-spotlight" aria-label="현재 인기투표 1등 패션">
             <div className="popular-spotlight-heading">
