@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listOutfits } from "@/lib/db";
+import { listOutfits } from "@/lib/outfits";
 import { UpvoteButton } from "@/components/upvote-button";
 
 export default async function LeaderboardPage({ searchParams }) {
@@ -20,11 +20,8 @@ export default async function LeaderboardPage({ searchParams }) {
           <div className="muted small">
             page {leaderboard.page} / {leaderboard.totalPages}
           </div>
-          <Link className={`btn ${sort === "popular" ? "" : "secondary"}`} href={`/leaderboard?sort=popular&page=1`}>
-            인기점수순
-          </Link>
-          <Link className={`btn ${sort === "total" ? "" : "secondary"}`} href={`/leaderboard?sort=total&page=1`}>
-            AI평가 순
+          <Link className="btn secondary" href="/main">
+            만들기
           </Link>
         </div>
 
@@ -36,8 +33,8 @@ export default async function LeaderboardPage({ searchParams }) {
               </Link>
               <div className="card-meta">
                 <div className="score-badge">
-                  <span className="muted small">total</span>
-                  <strong>{outfit.totalScore}</strong>
+                  <span className="muted small">upload</span>
+                  <strong>{outfit.id.slice(0, 4)}</strong>
                 </div>
                 <UpvoteButton outfitId={outfit.id} initialScore={outfit.popularScore} />
               </div>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getOutfitById } from "@/lib/db";
-import { MomReviewSections } from "@/components/mom-review-sections";
+import { getOutfitById } from "@/lib/outfits";
+import { UpvoteButton } from "@/components/upvote-button";
 
 export default async function OutfitDetailPage({ params }) {
   const { id } = await params;
@@ -25,34 +25,7 @@ export default async function OutfitDetailPage({ params }) {
 
           <article className="outfit-data-card">
             <section className="outfit-score-row" aria-label="점수 조회">
-              <div className="outfit-score-chip">
-                <span>total</span>
-                <strong>{outfit.totalScore}</strong>
-              </div>
-              <div className="outfit-score-chip">
-                <span>popular</span>
-                <strong>{outfit.popularScore}</strong>
-              </div>
-            </section>
-
-            <section className="outfit-prompt-list" aria-label="입력 프롬프트">
-              <div>
-                <strong>모자 프롬프트</strong>
-                <p>{outfit.hatPrompt}</p>
-              </div>
-              <div>
-                <strong>상의 프롬프트</strong>
-                <p>{outfit.topPrompt}</p>
-              </div>
-              <div>
-                <strong>하의 프롬프트</strong>
-                <p>{outfit.bottomPrompt}</p>
-              </div>
-            </section>
-
-            <section className="outfit-review" aria-label="엄마 AI 평가">
-              <strong>엄마 AI의 평가</strong>
-              <MomReviewSections review={outfit.momReview} compact />
+              <UpvoteButton outfitId={outfit.id} initialScore={outfit.popularScore} />
             </section>
 
             <Link className="outfit-back-link" href="/leaderboard">

@@ -29,10 +29,9 @@ Fullstack: Next.js
 Runtime: Node.js
 AI Image Generation: Imagen (Gemini API)  
 AI Evaluation: Gemini API (text generation)  
-DB: SQLite  
-Image Storage: Compute Engine 로컬 디스크 (/public/uploads)  
-Infra: GCP Compute Engine 1대  
-Process: PM2
+DB: 없음
+Image Storage: Git에 포함된 public/uploads 정적 파일
+Infra: Vercel
 
 ---
 
@@ -62,8 +61,7 @@ Process: PM2
 
 total_score = silhouette_score + mom_ai_score
 
-단, silhouette_score와 mom_ai_score는 내부 계산에만 사용되며
-DB 및 API에서는 total_score만 사용합니다.
+단, silhouette_score와 mom_ai_score는 내부 계산에만 사용됩니다.
 
 ### Silhouette Score Rule
 
@@ -168,26 +166,7 @@ DB 및 API에서는 total_score만 사용합니다.
 ├── app/                # Next.js pages  
 ├── app/api/            # API routes  
 ├── public/uploads/     # generated images  
-├── db.sqlite           # SQLite DB  
 └── lib/                # Gemini API logic  
-
----
-
-## Database Schema
-
-```sql
-CREATE TABLE outfits (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  hat_prompt TEXT NOT NULL,
-  top_prompt TEXT NOT NULL,
-  bottom_prompt TEXT NOT NULL,
-  composed_img_url TEXT NOT NULL,
-  total_score INTEGER NOT NULL,
-  popular_score INTEGER DEFAULT 0,
-  mom_review TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
 
 ---
 
@@ -195,10 +174,9 @@ CREATE TABLE outfits (
 
 /public/uploads/{uuid}.png  
 
-- 서버에는 최종 합성 이미지 1장만 로컬 디스크에 저장  
+- 최종 이미지는 Git에 커밋한 뒤 Vercel 정적 파일로 호스팅
 - 생성된 모자/상의/하의 이미지는 서버에 저장하지 않음
 - 생성된 파트 이미지는 사용자 세션 범위의 클라이언트 상태에서만 유지
-- DB에는 최종 합성 이미지 URL만 저장  
 
 composed_img_url = /uploads/{uuid}.png
 
@@ -366,12 +344,11 @@ CTA:
 → 생성된 파트 이미지는 클라이언트 상태에만 유지
 → 사용자가 각 이미지를 실루엣 위에 드래그 배치
 → 최종 점수 계산
-→ 최종 제출 시 서버가 합성 이미지 1장만 로컬 저장 (/uploads)
-→ 점수, 이미지 url SQLite 저장
+→ 배포용 리더보드는 Git에 커밋된 /public/uploads 이미지 조회
 → 리더보드 출력
 → 패션 카드 클릭
 → 패션 디테일 조회
-→ 프롬프트 / mom_review / total 점수 / 인기 점수 표시
+→ 이미지 조회 / 브라우저별 추천 버튼 표시
 
 ---
 

@@ -20,10 +20,9 @@ GEMINI_IMAGE_MODEL=gemini-2.5-flash-image
 
 | 패키지 | 버전 |
 | --- | --- |
-| Next.js | `15.3.2` |
+| Next.js | `15.3.8` |
 | React | `19.1.0` |
 | React DOM | `19.1.0` |
-| better-sqlite3 | `^11.7.0` |
 | sharp | `^0.34.1` |
 
 ## 서비스 아키텍처
@@ -33,11 +32,16 @@ flowchart LR
   User[사용자] --> Next[Next.js App]
   Next --> ImageAPI[Gemini Image API]
   Next --> TextAPI[Gemini Text API]
-  Next --> SQLite[(SQLite)]
-  Next --> Uploads[로컬 이미지 저장소]
+  Next --> Uploads[Git에 포함된 public/uploads 이미지]
 
   ImageAPI --> Next
   TextAPI --> Next
-  SQLite --> Next
   Uploads --> Next
 ```
+
+## Vercel 배포 메모
+
+- 루트 경로(`/`)는 `/main`으로 이동합니다.
+- 리더보드는 `public/uploads`에 Git으로 커밋된 이미지 파일을 읽어 표시합니다.
+- 추천 버튼은 브라우저 `localStorage`에 저장되며 서버 DB에는 누적하지 않습니다.
+- `/api/outfits` POST 업로드 저장 기능은 정적 Vercel 호스팅용으로 비활성화되어 있습니다.

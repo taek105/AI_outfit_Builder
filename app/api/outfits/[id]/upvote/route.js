@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getOutfitById, incrementPopularScore } from "@/lib/db";
+import { getOutfitById } from "@/lib/outfits";
 import { guardOncePerSession } from "@/lib/request-guard";
 
 export async function POST(request, { params }) {
@@ -19,6 +19,5 @@ export async function POST(request, { params }) {
     return guardResponse;
   }
 
-  const updated = incrementPopularScore(id);
-  return NextResponse.json({ popularScore: updated.popularScore });
+  return NextResponse.json({ popularScore: existing.popularScore + 1 });
 }

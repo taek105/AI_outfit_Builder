@@ -1,72 +1,18 @@
 import { NextResponse } from "next/server";
-import { composeOutfit, saveComposedImage } from "@/lib/compose";
-import { createOutfit } from "@/lib/db";
-import { generateMomReview } from "@/lib/gemini";
-import { guardCostlyApi } from "@/lib/request-guard";
-import { scoreSilhouette } from "@/lib/scoring";
-import { normalizePlacements, validateImageData, validatePrompt } from "@/lib/validators";
+import { listOutfits } from "@/lib/outfits";
 
-export async function POST(request) {
-  const guardResponse = await guardCostlyApi(request, {
-    action: "outfit",
-    sessionLimit: 10
-  });
+export async function GET(request) {
+  const searchParams = request.nextUrl.searchParams;
+  const sort = searchParams.get("sort") || "popular";
+  const page = Number(searchParams.get("page") || "1");
+  const limit = Number(searchParams.get("limit") || "4");
 
-  if (guardResponse) {
-    return guardResponse;
-  }
+  return NextResponse.json(listOutfits(sort, page, limit));
+}
 
-  const body = await request.json();
-
-  const prompts = body?.prompts || {};
-  const images = body?.images || {};
-
-  if (![prompts.hat, prompts.top, prompts.bottom].every(validatePrompt)) {
-    return NextResponse.json({ error: "all prompts are required" }, { status: 400 });
-  }
-
-  if (![images.hat, images.top, images.bottom].every(validateImageData)) {
-    return NextResponse.json({ error: "all generated images are required" }, { status: 400 });
-  }
-
-  let placements;
-
-  try {
-    placements = normalizePlacements(body?.placements);
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
-
-  const silhouette = scoreSilhouette(placements);
-  const imageBuffer = await composeOutfit({ images, placements });
-  const composedImgUrl = await saveComposedImage(imageBuffer);
-  let reviewResult;
-
-  try {
-    reviewResult = await generateMomReview({
-      hatPrompt: prompts.hat,
-      topPrompt: prompts.top,
-      bottomPrompt: prompts.bottom,
-      silhouetteScore: silhouette.total,
-      composedImageDataUrl: `data:image/png;base64,${imageBuffer.toString("base64")}`
-    });
-  } catch (error) {
-    return NextResponse.json({ error: error.message || "mom AI evaluation failed" }, { status: 502 });
-  }
-
-  const outfit = createOutfit({
-    hatPrompt: prompts.hat,
-    topPrompt: prompts.top,
-    bottomPrompt: prompts.bottom,
-    composedImgUrl,
-    totalScore: reviewResult.totalScore,
-    momReview: reviewResult.review
-  });
-
-  return NextResponse.json({
-    id: outfit.id,
-    composedImgUrl: outfit.composedImgUrl,
-    totalScore: outfit.totalScore,
-    momReview: outfit.momReview
-  });
+export async function POST() {
+  return NextResponse.json(
+    { error: "outfit upload API is disabled for static Vercel hosting" },
+    { status: 410 }
+  );
 }

@@ -24,8 +24,10 @@ export function UpvoteButton({ outfitId, initialScore }) {
 
   useEffect(() => {
     const votes = readVotes();
-    setIsLocked(Boolean(votes[outfitId]));
-  }, [outfitId]);
+    const voted = Boolean(votes[outfitId]);
+    setIsLocked(voted);
+    setPopularScore(initialScore + (voted ? 1 : 0));
+  }, [initialScore, outfitId]);
 
   async function handleUpvote() {
     if (isLocked || isPending || isClicked) {
@@ -36,23 +38,16 @@ export function UpvoteButton({ outfitId, initialScore }) {
     setIsPending(true);
 
     try {
-      const response = await fetch(`/api/outfits/${outfitId}/upvote`, { method: "POST" });
-      const payload = await response.json();
-
-      if (!response.ok) {
-        setIsClicked(false);
-        return;
-      }
-
       const votes = readVotes();
       votes[outfitId] = true;
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+      const nextScore = initialScore + 1;
       setIsLocked(true);
-      setPopularScore(payload.popularScore);
+      setPopularScore(nextScore);
       window.dispatchEvent(new CustomEvent("outfit-upvoted", {
         detail: {
           outfitId,
-          popularScore: payload.popularScore
+          popularScore: nextScore
         }
       }));
     } catch {
@@ -64,7 +59,7 @@ export function UpvoteButton({ outfitId, initialScore }) {
 
   return (
     <button className="btn secondary" type="button" disabled={isLocked || isPending || isClicked} onClick={handleUpvote}>
-      👍 {popularScore} {isLocked ? "(완료)" : ""}
+      추천 {popularScore} {isLocked ? "(완료)" : ""}
     </button>
   );
 }

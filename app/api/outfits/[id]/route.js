@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getOutfitById } from "@/lib/db";
+import { getOutfitById } from "@/lib/outfits";
 
 export async function GET(_request, { params }) {
   const { id } = await params;
