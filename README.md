@@ -1,8 +1,12 @@
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/89bd496a-674c-45bd-a8b1-5feb1ded8ae6" />
+
+
 # AI 옷입히기
 
 ## .env.local 설정
 
 프로젝트 루트에 `.env.local` 파일을 만들고 아래 값을 설정합니다.
+
 
 ```bash
 GEMINI_API_KEY=your_gemini_text_api_key
